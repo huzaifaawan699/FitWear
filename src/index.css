@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Arial", sans-serif;
+}
+
+/* Make all sections have padding for smaller screens */
+section {
+  padding: 16px;
+}
+
+/* Adjust font sizes for mobile devices */
+h1 {
+  font-size: 2.5rem; /* Adjust this value for mobile */
+}
+
+h2 {
+  font-size: 1.5rem; /* Adjust this value for mobile */
+}
+
+.loader {
+  border: 8px solid rgba(255, 255, 255, 0.3);
+  border-left-color: #fbbf24; /* Yellow */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+/* Fade-in animation for the FitWear text */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease forwards; /* Adjust duration and easing as needed */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s forwards; /* Adjust duration as needed */
+}
+
+.opacity-100 {
+  opacity: 1; /* Fully visible */
+}
+
+.translate-y-0 {
+  transform: translateY(0); /* Move to original position */
+}
+/* Optional: refine hover effects */
+a {
+  transition: transform 0.3s, box-shadow 0.3s; /* Adjust timing for a smoother effect */
+}
