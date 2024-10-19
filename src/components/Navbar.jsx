@@ -70,6 +70,15 @@ const Navbar = () => {
               Bluetooth Tracking
             </a>
           </li>
+          <li className="p-4 hover:bg-yellow-500 rounded transition duration-300">
+            <a 
+              href="/todo" // New link for the To-Do List page
+              className="transition-colors duration-300 text-white"
+              onClick={handleLinkClick}
+            >
+              To-Do List
+            </a>
+          </li>
         </ul>
       </div>
     </nav>

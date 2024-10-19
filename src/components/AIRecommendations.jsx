@@ -1,12 +1,52 @@
 import { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
+
+// Define your API URL and key here
+const API_URL = "https://api.groq.com/openai/v1/chat/completions";
+const API_KEY = "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"; // Replace with your actual API key
+
+async function getGroqChatCompletion(question) {
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${API_KEY}`,
+    },
+    body: JSON.stringify({
+      messages: [
+        {
+          role: "user",
+          content: question,
+        },
+      ],
+      model: "llama-3.2-3b-preview", // Update to the model you want to use
+      temperature: 1,
+      max_tokens: 1024,
+      top_p: 1,
+      stream: false, // Change to false to get the complete response
+      stop: null,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  const data = await response.json(); // Get the JSON response
+
+  // Check if data.choices exists and extract content
+  if (data.choices && data.choices.length > 0) {
+    return data.choices[0].message.content; // Return the content of the assistant's response
+  } else {
+    throw new Error('No valid response from the API');
+  }
+}
 
 function AIRecommendations() {
   const [question, setQuestion] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [copySuccess, setCopySuccess] = useState('');
-  const endOfChatRef = useRef(null); // Ref for scrolling
+  const endOfChatRef = useRef(null);
 
   const predefinedQuestions = [
     "What are the best exercises for weight loss?",
@@ -17,39 +57,34 @@ function AIRecommendations() {
   ];
 
   async function generateAnswer() {
-    if (!question.trim()) return; // Prevent generating if the question is empty
+    if (!question.trim()) return;
     setIsGenerating(true);
 
-    // Add the user's question to the chat history
     const newChatHistory = [...chatHistory, { type: 'user', text: question }];
     setChatHistory(newChatHistory);
     setQuestion('');
 
-    try {
-      const response = await axios({
-        url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyApRoKI9-oKXp2583R59F7rWKQK_lObIGY",
-        method: "post",
-        data: {
-          contents: [{ parts: [{ text: question }] }],
-        },
-      });
+    // Clear previous bot response
+    const botResponseIndex = chatHistory.findIndex(chat => chat.type === 'bot');
+    if (botResponseIndex !== -1) {
+      const updatedChatHistory = [...chatHistory];
+      updatedChatHistory.splice(botResponseIndex, 1);
+      setChatHistory(updatedChatHistory);
+    }
 
-      const generatedText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (generatedText) {
-        const formattedResponse = formatResponse(question, generatedText);
-        setChatHistory((prevHistory) => [...prevHistory, { type: 'bot', text: formattedResponse }]);
-      } else {
-        setChatHistory((prevHistory) => [...prevHistory, { type: 'bot', text: "I encountered an unexpected issue while processing your request." }]);
-      }
+    try {
+      // Use the non-streaming version of getGroqChatCompletion
+      const generatedText = await getGroqChatCompletion(question);
+      setChatHistory((prevHistory) => [
+        ...prevHistory,
+        { type: 'bot', text: generatedText.trim() },
+      ]);
     } catch (error) {
+      console.error("Error details:", error);
       setChatHistory((prevHistory) => [...prevHistory, { type: 'bot', text: "I apologize for the inconvenience. There was an error processing your request." }]);
     } finally {
       setIsGenerating(false);
     }
-  }
-
-  function formatResponse(question, response) {
-    return `**Question:** ${question}\n\n**Response:**\n${response.trim()}\n\n---\n\nIf you have more questions or need further assistance, feel free to ask!`;
   }
 
   function handleQuestionChange(e) {
@@ -58,7 +93,7 @@ function AIRecommendations() {
 
   function handleKeyDown(e) {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault(); // Prevents default behavior of adding a new line
+      e.preventDefault();
       generateAnswer();
     }
   }
@@ -77,7 +112,6 @@ function AIRecommendations() {
     generateAnswer();
   }
 
-  // Scroll to the bottom of the chat when chatHistory changes
   useEffect(() => {
     endOfChatRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatHistory]);
@@ -112,7 +146,7 @@ function AIRecommendations() {
               )}
             </div>
           ))}
-          <div ref={endOfChatRef} /> {/* This will be used for scrolling */}
+          <div ref={endOfChatRef} />
         </div>
 
         <textarea 

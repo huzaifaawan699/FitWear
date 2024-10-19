@@ -7,12 +7,14 @@ import Health from './pages/Health';
 import AI from './pages/AI';
 import Food from './pages/Food';
 import Bluetooth from './pages/Bluetooth';
+import ChallengePage from './pages/ChallengePage'; // Import the ChallengePage component
+import ToDoListPage from './pages/ToDoListPage'; // Import the ToDoListPage component
 
 function App() {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Use useEffect to set loading state on route change
+  // Set loading state on route change
   useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => {
@@ -41,6 +43,8 @@ function App() {
             <Route path="/ai" element={<AI />} />
             <Route path="/food" element={<Food />} />
             <Route path="/bluetooth" element={<Bluetooth />} />
+            <Route path="/challenge" element={<ChallengePage />} /> {/* New route for the Challenge Page */}
+            <Route path="/todo" element={<ToDoListPage />} /> {/* New route for the To-Do List Page */}
             {/* Redirect all other routes to home */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

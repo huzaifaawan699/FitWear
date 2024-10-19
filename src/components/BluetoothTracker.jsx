@@ -98,7 +98,7 @@ const BluetoothTracker = () => {
   };
 
   return (
-    <section id="bluetooth" className="p-6 bg-gray-100 rounded-lg shadow-md mb-4">
+    <section id="bluetooth" className="p-6 bg-white rounded-lg shadow-lg mb-4 transition-transform duration-300 hover:shadow-xl">
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">Bluetooth Health Tracker</h2>
       
       {/* Connect Button */}

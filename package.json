@@ -10,15 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@huggingface/inference": "^2.8.1",
     "@react-three/drei": "^9.114.5",
     "@react-three/fiber": "^8.17.10",
     "axios": "^1.7.7",
+    "chart.js": "^4.4.5",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.11.9",
+    "groq-sdk": "^0.7.0",
     "react": "^18.3.1",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0",
-    "three": "^0.169.0"
+    "three": "^0.169.0",
+    "transformers": "^3.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
