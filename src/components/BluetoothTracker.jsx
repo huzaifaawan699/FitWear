@@ -98,14 +98,14 @@ const BluetoothTracker = () => {
   };
 
   return (
-    <section id="bluetooth" className="p-6 bg-white rounded-lg shadow-lg mb-4 transition-transform duration-300 hover:shadow-xl">
+    <section id="bluetooth" className="p-6 bg-gray-200 rounded-lg shadow-lg mb-4 transition-transform duration-300 hover:shadow-xl">
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">Bluetooth Health Tracker</h2>
       
       {/* Connect Button */}
       {!connectedDevice ? (
         <button
           onClick={connectToDevice}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
+          className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200"
           disabled={loading}
         >
           {loading ? 'Connecting...' : 'Connect to Smartwatch'}

@@ -7,34 +7,35 @@ import Health from './pages/Health';
 import AI from './pages/AI';
 import Food from './pages/Food';
 import Bluetooth from './pages/Bluetooth';
-import ChallengePage from './pages/ChallengePage'; // Import the ChallengePage component
-import ToDoListPage from './pages/ToDoListPage'; // Import the ToDoListPage component
+import ChallengePage from './pages/ChallengePage';
+import ToDoListPage from './pages/ToDoListPage';
+import FoodDetectionPage from './pages/FoodDetectionPage'; // Import the FoodDetectionPage component
 
 function App() {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Set loading state on route change
+  // Handle loading state on route change
   useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 500); // Simulate a loading time (500ms)
+    }, 500); // Simulate a loading delay of 500ms
 
-    // Cleanup timeout on unmount
     return () => clearTimeout(timer);
-  }, [location.pathname]); // Runs on route change
+  }, [location.pathname]);
 
   return (
     <div className="App">
       <Navbar />
-      {/* Only show HeroSection on the home page */}
+
+      {/* HeroSection only on the home page */}
       {location.pathname === '/' && <HeroSection />}
-      <main className="p-6">
+
+      <main className="p-6 min-h-screen">
         {isLoading ? (
           <div className="flex flex-col justify-center items-center h-full">
-            <div className="loader mb-4">Loading...</div> {/* Loading indicator */}
-            <h1 className="text-4xl font-bold text-white animate-fadeIn">FitWear</h1> {/* Loading name with animation */}
+            <h1 className="text-4xl font-bold text-gray-700 animate-fadeIn mt-4">FitWear</h1> {/* Animated loading title */}
           </div>
         ) : (
           <Routes>
@@ -43,10 +44,10 @@ function App() {
             <Route path="/ai" element={<AI />} />
             <Route path="/food" element={<Food />} />
             <Route path="/bluetooth" element={<Bluetooth />} />
-            <Route path="/challenge" element={<ChallengePage />} /> {/* New route for the Challenge Page */}
-            <Route path="/todo" element={<ToDoListPage />} /> {/* New route for the To-Do List Page */}
-            {/* Redirect all other routes to home */}
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/challenge" element={<ChallengePage />} />
+            <Route path="/todo" element={<ToDoListPage />} />
+            <Route path="/food-detection" element={<FoodDetectionPage />} /> {/* New route for the Food Detection Page */}
+            <Route path="*" element={<Navigate to="/" />} /> {/* Redirect any invalid routes */}
           </Routes>
         )}
       </main>
@@ -54,6 +55,7 @@ function App() {
   );
 }
 
+// AppWrapper for routing
 export default function AppWrapper() {
   return (
     <Router>

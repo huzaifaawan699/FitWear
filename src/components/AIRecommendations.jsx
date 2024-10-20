@@ -73,7 +73,6 @@ function AIRecommendations() {
     }
 
     try {
-      // Use the non-streaming version of getGroqChatCompletion
       const generatedText = await getGroqChatCompletion(question);
       setChatHistory((prevHistory) => [
         ...prevHistory,
@@ -117,7 +116,7 @@ function AIRecommendations() {
   }, [chatHistory]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-6">
+    <div className="min-h-screen bg-gray-200 flex flex-col items-center p-6">
       <div className="w-full max-w-lg bg-white rounded-xl shadow-lg p-6 space-y-6">
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Fitness & Health Chatbot</h1>
         
@@ -127,7 +126,7 @@ function AIRecommendations() {
             <button
               key={index}
               onClick={() => handlePredefinedQuestion(pq)}
-              className="bg-gray-800 text-white font-semibold py-1 px-3 rounded-lg hover:bg-gray-700 transition-all duration-300 ease-in-out">
+              className="bg-gray-300 text-gold-600 font-semibold py-1 px-3 rounded-lg hover:bg-gold-500 transition-all duration-300 ease-in-out">
               {pq}
             </button>
           ))}
@@ -135,12 +134,12 @@ function AIRecommendations() {
 
         <div className="flex flex-col space-y-4 overflow-auto max-h-96">
           {chatHistory.map((chat, index) => (
-            <div key={index} className={`p-3 rounded-lg ${chat.type === 'user' ? 'bg-gray-300 self-end' : 'bg-gray-200 self-start'}`}>
+            <div key={index} className={`p-3 rounded-lg ${chat.type === 'user' ? 'bg-gold-200 self-end' : 'bg-gray-300 self-start'}`}>
               <p className="text-gray-800 whitespace-pre-line">{chat.text}</p>
               {chat.type === 'bot' && (
                 <button 
                   onClick={() => copyToClipboard(chat.text)} 
-                  className="mt-1 bg-gray-600 text-white font-semibold py-1 px-3 rounded-lg hover:bg-gray-500 transition-all duration-300 ease-in-out">
+                  className="mt-1 bg-gray-300 text-gold-600 font-semibold py-1 px-3 rounded-lg hover:bg-gold-500 transition-all duration-300 ease-in-out">
                   Copy
                 </button>
               )}
@@ -153,8 +152,8 @@ function AIRecommendations() {
           value={question} 
           onChange={handleQuestionChange} 
           onKeyDown={handleKeyDown}
-          className={`w-full p-4 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 resize-none ${
-            isGenerating ? "border-gray-800 ring-2 ring-gray-800" : "border-gray-300 focus:ring-gray-500"
+          className={`w-full p-4 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 resize-none $ {
+            isGenerating ? "border-gold-500 ring-2 ring-gold-500" : "border-gray-300 focus:ring-gray-500"
           }`}
           placeholder="Ask me anything about fitness, health, or diet..."
           rows='3'>
@@ -163,7 +162,7 @@ function AIRecommendations() {
         <div className="flex justify-between">
           <button 
             onClick={generateAnswer} 
-            className={`bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition-all duration-300 ease-in-out transform ${isGenerating ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+            className={`bg-gray-300 text-gold-600 font-semibold py-2 px-4 rounded-lg hover:bg-gold-500 transition-all duration-300 ease-in-out transform ${isGenerating ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
             disabled={isGenerating}>
             {isGenerating ? "Generating..." : "Send"}
           </button>

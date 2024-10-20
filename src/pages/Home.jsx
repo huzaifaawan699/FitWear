@@ -54,20 +54,20 @@ const Home = () => {
 
   return (
     <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12 px-4">
-      <h2 className="text-3xl font-semibold text-center mb-8">Welcome to FitWear!</h2>
+      <h2 className="text-4xl font-semibold text-center mb-8 text-yellow-400">Welcome to FitWear!</h2>
       <p className="text-lg text-center mb-12">FitWear is designed to help you monitor your health and improve your fitness journey.</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {products.map((product, index) => (
           <a 
             key={product.id} 
             href={product.path} 
-            className={`bg-gradient-to-b from-gray-700 to-gray-800 rounded-lg p-6 shadow-lg transition-transform transform duration-500 ease-in-out 
+            className={`bg-gradient-to-b from-gray-800 to-gray-700 rounded-lg p-6 shadow-lg transition-transform transform duration-500 ease-in-out 
               ${visibleCards.includes(index + 1) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
               hover:scale-105 hover:shadow-xl`} // Animation classes and hover effects
           >
-            <div className="text-4xl mb-4 text-center">{product.icon}</div>
-            <h3 className="text-xl font-semibold text-center mb-2">{product.title}</h3>
-            <p className="text-center">{product.description}</p>
+            <div className="text-5xl mb-4 text-center text-yellow-400">{product.icon}</div>
+            <h3 className="text-xl font-semibold text-center mb-2 text-yellow-300">{product.title}</h3>
+            <p className="text-center text-gray-200">{product.description}</p>
           </a>
         ))}
       </div>

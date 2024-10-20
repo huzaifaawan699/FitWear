@@ -11,9 +11,15 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-900 text-white p-4 flex justify-between items-center shadow-lg fixed top-0 left-0 w-full z-50">
       <div className="text-2xl font-bold">
-        <a href="/" className="transition-colors duration-300 text-white">
-          FitWear
+          <a 
+           href="/" 
+           className="transition-colors duration-300 font-extrabold text-3xl"
+           >
+         <span className="text-yellow-400 hover:text-yellow-300">PULSE</span>
+        <span className="text-white hover:text-gray-500 text-5xl">X</span>
         </a>
+
+
       </div>
       <div className="md:hidden">
         <button 
@@ -72,11 +78,20 @@ const Navbar = () => {
           </li>
           <li className="p-4 hover:bg-yellow-500 rounded transition duration-300">
             <a 
-              href="/todo" // New link for the To-Do List page
+              href="/todo" 
               className="transition-colors duration-300 text-white"
               onClick={handleLinkClick}
             >
               To-Do List
+            </a>
+          </li>
+          <li className="p-4 hover:bg-yellow-500 rounded transition duration-300">
+            <a 
+              href="/food-detection" 
+              className="transition-colors duration-300 text-white"
+              onClick={handleLinkClick}
+            >
+              Food Detection
             </a>
           </li>
         </ul>

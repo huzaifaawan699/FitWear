@@ -5,6 +5,7 @@ function FoodAnalyzer() {
   const [userInput, setUserInput] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [nutritionData, setNutritionData] = useState(null);
   const endOfChatRef = useRef(null); // Ref for scrolling
 
   const appId = '665da231'; // Replace with your actual app ID
@@ -27,18 +28,15 @@ function FoodAnalyzer() {
   async function handleUserInput() {
     if (!userInput.trim()) return; // Prevent empty submissions
 
-    // Add the user's input to the chat history
     const newChatHistory = [...chatHistory, { type: 'user', text: userInput }];
     setChatHistory(newChatHistory);
-    
+
     setIsGenerating(true);
-    
-    // Clear input field for a better user experience
-    const tempInput = userInput; // Keep the input for processing
-    setUserInput(''); // Clear input field
+
+    const tempInput = userInput;
+    setUserInput('');
 
     try {
-      // Split the user input into separate ingredients
       const ingredients = tempInput.split('\n').map(item => item.trim()).filter(item => item);
       const nutritionDataArray = await Promise.all(ingredients.map(ingredient => 
         axios.get(
@@ -46,12 +44,11 @@ function FoodAnalyzer() {
         )
       ));
 
-      // Combine nutritional data from each ingredient
       const combinedNutritionData = combineNutritionData(nutritionDataArray);
+      setNutritionData(combinedNutritionData); // Save combined data for table display
 
       const formattedResponse = formatResponse(combinedNutritionData);
       setChatHistory((prevHistory) => [...prevHistory, { type: 'bot', text: formattedResponse }]);
-
     } catch (error) {
       console.error('Error fetching food information:', error);
       setChatHistory((prevHistory) => [...prevHistory, { type: 'bot', text: "There was an error fetching the information. Please try again." }]);
@@ -94,24 +91,7 @@ function FoodAnalyzer() {
   }
 
   function formatResponse(nutritionData) {
-    return `**Nutrition Facts**\n` +
-      `**Amount Per Serving**\n` +
-      `**Calories:** ${nutritionData.calories} kcal\n` +
-      `**% Daily Value***\n` +
-      `**Total Fat:** ${Math.round(nutritionData.totalNutrients.FAT.quantity)} g  (${Math.round((nutritionData.totalNutrients.FAT.quantity / 78) * 100)}%)\n` +
-      `**Saturated Fat:** ${Math.round(nutritionData.totalNutrients.FA_SAT.quantity)} g  (${Math.round((nutritionData.totalNutrients.FA_SAT.quantity / 20) * 100)}%)\n` +
-      `**Trans Fat:** N/A\n` + 
-      `**Cholesterol:** ${Math.round(nutritionData.totalNutrients.CHOLE.quantity)} mg  (${Math.round((nutritionData.totalNutrients.CHOLE.quantity / 300) * 100)}%)\n` +
-      `**Sodium:** ${Math.round(nutritionData.totalNutrients.NA.quantity)} mg  (${Math.round((nutritionData.totalNutrients.NA.quantity / 2300) * 100)}%)\n` +
-      `**Total Carbohydrate:** ${Math.round(nutritionData.totalNutrients.CHOCDF.quantity)} g  (${Math.round((nutritionData.totalNutrients.CHOCDF.quantity / 275) * 100)}%)\n` +
-      `**Dietary Fiber:** ${Math.round(nutritionData.totalNutrients.FIBTG.quantity)} g  (${Math.round((nutritionData.totalNutrients.FIBTG.quantity / 28) * 100)}%)\n` +
-      `**Total Sugars:** ${Math.round(nutritionData.totalNutrients.SUGAR.quantity)} g\n` +
-      `**Includes - Added Sugars:** N/A\n` + 
-      `**Protein:** ${Math.round(nutritionData.totalNutrients.PROCNT.quantity)} g  (${Math.round((nutritionData.totalNutrients.PROCNT.quantity / 50) * 100)}%)\n` +
-      `**Vitamin D:** ${Math.round(nutritionData.totalNutrients.VITD.quantity)} µg  (${Math.round((nutritionData.totalNutrients.VITD.quantity / 20) * 100)}%)\n` +
-      `**Calcium:** ${Math.round(nutritionData.totalNutrients.CA.quantity)} mg  (${Math.round((nutritionData.totalNutrients.CA.quantity / 1000) * 100)}%)\n` +
-      `**Iron:** ${Math.round(nutritionData.totalNutrients.FE.quantity)} mg  (${Math.round((nutritionData.totalNutrients.FE.quantity / 18) * 100)}%)\n` +
-      `**Potassium:** ${Math.round(nutritionData.totalNutrients.K.quantity)} mg  (${Math.round((nutritionData.totalNutrients.K.quantity / 3500) * 100)}%)`;
+    return `Nutrition analysis complete. Below is the table with details.`;
   }
 
   function handleInputChange(e) {
@@ -130,19 +110,18 @@ function FoodAnalyzer() {
     endOfChatRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatHistory]);
 
-  // Function to handle ingredient selection and auto-generate
   const handleIngredientSelect = (ingredient) => {
     setUserInput(prevInput => (prevInput ? `${prevInput}\n${ingredient}` : ingredient)); // Append ingredient to input
-    handleUserInput(); // Automatically generate response after selection
+    handleUserInput();
   };
 
-  // Function to clear chat history
   const clearChatHistory = () => {
     setChatHistory([]);
+    setNutritionData(null); // Clear table as well
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center p-6">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
       <div className="w-full max-w-lg bg-white rounded-xl shadow-lg p-6 space-y-6 border border-gray-300">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">Food Analyzer</h1>
 
@@ -151,46 +130,105 @@ function FoodAnalyzer() {
             <button 
               key={index} 
               onClick={() => handleIngredientSelect(ingredient)}
-              className="bg-black text-white rounded-lg px-4 py-2 hover:bg-gray-800 transition duration-300 ease-in-out"
+              className="bg-gold text-black rounded-lg px-4 py-2 hover:bg-yellow-400 transition duration-300 ease-in-out"
             >
               {ingredient}
             </button>
           ))}
         </div>
 
-        <div className="flex flex-col space-y-4 overflow-auto max-h-80 p-2 bg-gray-100 rounded-lg shadow-inner">
+        <div className="flex flex-col space-y-4 overflow-auto max-h-80 p-2 bg-gray-200 rounded-lg shadow-inner">
           {chatHistory.map((chat, index) => (
-            <div key={index} className={`p-3 rounded-lg ${chat.type === 'user' ? 'bg-black text-white self-end' : 'bg-gray-300 text-gray-800 self-start'}`}>
+            <div key={index} className={`p-3 rounded-lg ${chat.type === 'user' ? 'bg-gold text-black self-end' : 'bg-gray-300 text-gray-800 self-start'}`}>
               <p className="whitespace-pre-line">{chat.text}</p>
             </div>
           ))}
-          <div ref={endOfChatRef} /> {/* This will be used for scrolling */}
+          <div ref={endOfChatRef} />
         </div>
 
-        <textarea 
-          value={userInput} 
-          onChange={handleInputChange} 
+        {nutritionData && (
+          <div className="overflow-auto max-h-80 p-2 bg-gray-200 rounded-lg shadow-inner">
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Nutrition Facts</h2>
+            <table className="min-w-full table-auto border-collapse border border-gray-400 text-left text-sm">
+              <thead className="bg-gray-300 text-gray-800">
+                <tr>
+                  <th className="border border-gray-400 px-4 py-2">Nutrient</th>
+                  <th className="border border-gray-400 px-4 py-2">Amount</th>
+                  <th className="border border-gray-400 px-4 py-2">% Daily Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">Calories</td>
+                  <td className="border border-gray-300 px-4 py-2">{nutritionData.calories} kcal</td>
+                  <td className="border border-gray-300 px-4 py-2">-</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">Total Fat</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round(nutritionData.totalNutrients.FAT.quantity)} g</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round((nutritionData.totalNutrients.FAT.quantity / 78) * 100)}%</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">Saturated Fat</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round(nutritionData.totalNutrients.FA_SAT.quantity)} g</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round((nutritionData.totalNutrients.FA_SAT.quantity / 20) * 100)}%</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">Cholesterol</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round(nutritionData.totalNutrients.CHOLE.quantity)} mg</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round((nutritionData.totalNutrients.CHOLE.quantity / 300) * 100)}%</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">Sodium</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round(nutritionData.totalNutrients.NA.quantity)} mg</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round((nutritionData.totalNutrients.NA.quantity / 2300) * 100)}%</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">Total Carbohydrate</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round(nutritionData.totalNutrients.CHOCDF.quantity)} g</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round((nutritionData.totalNutrients.CHOCDF.quantity / 300) * 100)}%</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">Dietary Fiber</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round(nutritionData.totalNutrients.FIBTG.quantity)} g</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round((nutritionData.totalNutrients.FIBTG.quantity / 25) * 100)}%</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">Sugars</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round(nutritionData.totalNutrients.SUGAR.quantity)} g</td>
+                  <td className="border border-gray-300 px-4 py-2">-</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 px-4 py-2">Protein</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round(nutritionData.totalNutrients.PROCNT.quantity)} g</td>
+                  <td className="border border-gray-300 px-4 py-2">{Math.round((nutritionData.totalNutrients.PROCNT.quantity / 50) * 100)}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <textarea
+          rows="3"
+          value={userInput}
+          onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          className={`w-full p-4 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 resize-none border-gray-300 focus:ring-black ${isGenerating ? "border-green-500 ring-2 ring-green-500" : ""}`}
-          placeholder="Type your ingredients here (e.g., '1 cup rice' or '10 ounces chickpeas')..."
-          rows='4'>
-        </textarea>
-
-        <div className="flex space-x-2">
-          <button 
-            onClick={handleUserInput} 
-            className={`bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-800 transition-all duration-300 ease-in-out ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`} 
-            disabled={isGenerating}
-          >
-            {isGenerating ? 'Analyzing...' : 'Analyze'}
-          </button>
-          <button 
-            onClick={clearChatHistory}
-            className="bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition-all duration-300 ease-in-out"
-          >
-            Clear Chat
-          </button>
-        </div>
+          placeholder="Enter ingredients (one per line)..."
+          className="border border-gray-400 rounded-lg p-2 resize-none w-full bg-gray-200 text-gray-800"
+        />
+        <button
+          onClick={handleUserInput}
+          className={`bg-gold text-black rounded-lg px-4 py-2 hover:bg-yellow-400 transition duration-300 ease-in-out ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={isGenerating}
+        >
+          {isGenerating ? 'Analyzing...' : 'Analyze'}
+        </button>
+        <button
+          onClick={clearChatHistory}
+          className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-400 transition duration-300 ease-in-out"
+        >
+          Clear Chat
+        </button>
       </div>
     </div>
   );

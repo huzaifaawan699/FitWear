@@ -69,7 +69,7 @@ const HeroSection = () => {
     <section className="relative w-full h-screen overflow-hidden bg-gradient-to-r from-gray-900 to-gray-800"> {/* Gradient background */}
       <div ref={sceneRef} className="absolute top-0 left-0 w-full h-full"></div>
       <div className="absolute inset-0 z-10 flex flex-col justify-center items-center text-center text-white">
-        <h1 className="text-5xl md:text-6xl font-extrabold mb-4">Welcome to FitWear</h1>
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-4">Welcome to Pulse-X</h1>
         <p className="text-lg md:text-xl mb-8 px-4 max-w-lg">Your all-in-one health tracker and fitness companion, designed to elevate your wellness journey.</p>
         <a 
           href="#health" 

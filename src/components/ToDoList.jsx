@@ -153,19 +153,19 @@ const ToDoList = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 rounded-lg shadow-lg max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">30-Day To-Do List</h2>
+    <div className="p-6 bg-gray-200 rounded-lg shadow-lg max-w-4xl mx-auto">
+      <h2 className="text-2xl font-bold mb-4 text-center text-yellow-600">30-Day To-Do List</h2>
       <div className="flex mb-6 justify-center">
         <input
           type="text"
           value={task}
           onChange={(e) => setTask(e.target.value)}
-          className="p-2 border rounded w-3/4 shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="p-2 border rounded w-3/4 shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500"
           placeholder="Add a new task"
         />
         <button
           onClick={handleAddTask}
-          className="ml-2 bg-blue-500 text-white py-2 px-4 rounded shadow-md hover:bg-blue-600 transition duration-200"
+          className="ml-2 bg-yellow-500 text-white py-2 px-4 rounded shadow-md hover:bg-yellow-600 transition duration-200"
         >
           Add Task
         </button>
@@ -177,7 +177,7 @@ const ToDoList = () => {
           <button
             key={index}
             onClick={() => handlePredefinedTaskClick(predefinedTask)}
-            className="bg-blue-300 text-black py-2 px-4 rounded shadow-md hover:bg-blue-400 transition duration-200"
+            className="bg-yellow-300 text-black py-2 px-4 rounded shadow-md hover:bg-yellow-400 transition duration-200"
           >
             {predefinedTask}
           </button>
@@ -225,7 +225,7 @@ const ToDoList = () => {
           </li>
         ))}
       </ul>
-      {loading && <p className="mt-4 text-center text-blue-500">Generating benefits...</p>}
+      {loading && <p className="mt-4 text-center text-yellow-600">Generating benefits...</p>}
     </div>
   );
 };
