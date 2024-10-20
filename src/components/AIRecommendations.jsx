@@ -22,7 +22,7 @@ async function getGroqChatCompletion(question) {
       temperature: 1,
       max_tokens: 1024,
       top_p: 1,
-      stream: false, // Change to false to get the complete response
+      stream: false,
       stop: null,
     }),
   });
@@ -31,11 +31,12 @@ async function getGroqChatCompletion(question) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
 
-  const data = await response.json(); // Get the JSON response
+  const data = await response.json();
 
   // Check if data.choices exists and extract content
   if (data.choices && data.choices.length > 0) {
-    return data.choices[0].message.content; // Return the content of the assistant's response
+    const content = data.choices[0].message.content.replace(/\*/g, ''); // Remove asterisks
+    return content.split('\n').slice(0, 5).join('\n'); // Limit to 5 lines
   } else {
     throw new Error('No valid response from the API');
   }
@@ -152,9 +153,7 @@ function AIRecommendations() {
           value={question} 
           onChange={handleQuestionChange} 
           onKeyDown={handleKeyDown}
-          className={`w-full p-4 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 resize-none $ {
-            isGenerating ? "border-gold-500 ring-2 ring-gold-500" : "border-gray-300 focus:ring-gray-500"
-          }`}
+          className={`w-full p-4 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 resize-none ${isGenerating ? "border-gold-500 ring-2 ring-gold-500" : "border-gray-300 focus:ring-gray-500"}`}
           placeholder="Ask me anything about fitness, health, or diet..."
           rows='3'>
         </textarea>
